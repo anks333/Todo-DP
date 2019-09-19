@@ -1,28 +1,22 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response } from 'express';
+import { connect } from 'mongoose';
+import { DBError } from './errors/DBError';
+import { Todo } from './models/Todo';
+import { User } from './models/User';
 
 const app = express();
-import { connect, ConnectionStates } from 'mongoose';
-import { User } from './models/User';
-import { Todo } from './models/Todo';
-import { DBError } from "./errors/DBError";
-
-
 
 connect('mongodb://localhost:27017/test')
     .then((r) => {
         // console.log(r);
     })
-    .catch(e => {
+    .catch((e) => {
         console.log(e);
     });
 
-
 // Add Plugins
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }))
-
-
-
+app.use(express.urlencoded({ extended: false }));
 
 app.get('/', async (req, res, next) => {
     const u = await User.findUser({ uid: 'USER-3' });
@@ -35,22 +29,16 @@ app.get('/', async (req, res, next) => {
         res.json({ todos });
     }
 
-})
+});
 
-
-
-
-app.use(function(err:Error, req:Request, res:Response, next:()=>void) {
-    if(err instanceof DBError) {
+app.use(function ErrorHandler(err: Error, req: Request, res: Response, next: () => void) {
+    if (err instanceof DBError) {
         console.log(err.stack);
         return res.status(500).send({ error: { message: err.message}});
     }
 
-    
 });
 
-
-
-app.listen(3000, function () {
+app.listen(3000, function SreverListener() {
     console.log('Listening in 3000');
 });

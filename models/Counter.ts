@@ -1,33 +1,32 @@
-import { BaseModel } from "./BaseModel";
-import { ICounter, ICounterModel, CounterModel } from "../dbmodels/Counter.model";
-
+import { CounterModel, ICounter, ICounterModel } from '../dbmodels/Counter.model';
+import { BaseModel } from './BaseModel';
 
 export class Counter extends BaseModel implements ICounter {
 
-    counterFor!: string;
-    count!: number;
-    
-    protected setProps(c: ICounter) {
-        this.count = c.count;
-        this.counterFor = c.counterFor;
-    } 
-
-    getCount(): number {
-        return this.count;
-    }
-
-    static getInstance(c: ICounter): Counter {
+    public static getInstance(c: ICounter): Counter {
         const counter = new Counter();
         counter.setProps(c);
         return counter;
     }
 
-    static nextCounter(counterFor: string) : Promise<Counter>{
+    public static nextCounter(counterFor: string): Promise<Counter> {
         return Counter.findOneAndUpsert<ICounterModel, Counter>(
-            { counterFor: counterFor },
+            { counterFor },
             { $inc: { count : 1} },
             CounterModel,
-            Counter
+            Counter,
         );
+    }
+
+    public counterFor!: string;
+    public count!: number;
+
+    public getCount(): number {
+        return this.count;
+    }
+
+    protected setProps(c: ICounter) {
+        this.count = c.count;
+        this.counterFor = c.counterFor;
     }
 }

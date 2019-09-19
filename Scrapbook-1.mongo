@@ -1,0 +1,4 @@
+db.users.find()
+
+
+db.todos.find()

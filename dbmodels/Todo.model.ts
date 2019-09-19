@@ -1,4 +1,4 @@
-import { Document, Schema, Model, model } from "mongoose";
+import { Document, Model, model, Schema } from 'mongoose';
 
 export interface ITodo {
     uid: string;
@@ -6,18 +6,16 @@ export interface ITodo {
     byUser: string;
     text: string;
     done: boolean;
-}  
-
+}
 
 export interface ITodoModel extends ITodo, Document {}
 
 export const TodoSchema: Schema = new Schema({
-    uid: String, 
-    createdAt: Number,
     byUser: String,
+    createdAt: Number,
+    done: Boolean,
     text: String,
-    done: Boolean
+    uid: String,
 });
 
-
-export const TodoModel: Model<ITodoModel> = model<ITodoModel>("Todo", TodoSchema);
+export const TodoModel: Model<ITodoModel> = model<ITodoModel>('Todo', TodoSchema);
